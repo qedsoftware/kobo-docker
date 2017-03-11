@@ -42,7 +42,7 @@ mongo:
   restart: on-failure
 
 kobocat:
-  image: qeddockerhub/kobocat:latest
+  image: qeddockerhub/kobocat-auto:latest
   # Dev: Build the image locally.
   # build: ../kobocat
   hostname: kobocat
@@ -86,7 +86,7 @@ kobocat:
   #   - 'kf-local.kobotoolbox.org:172.17.0.1'
 
 kpi:
-  image: qeddockerhub/kpi:latest
+  image: qeddockerhub/kpi-auto:latest
   # Dev: Build the image locally.
   # build: ../kpi
   hostname: kpi
