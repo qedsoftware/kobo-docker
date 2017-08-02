@@ -31,7 +31,7 @@ mongo:
     - MONGO_DATA=/srv/db
   env_file:
     - ./envfile.local.txt
-  # NOTE: On OS X and Windows, comment out the following `volumes` directive 
+  # NOTE: On OS X and Windows, comment out the following `volumes` directive
   #   as a workaround to a VirtualBox folder sharing+Mongo incompatibility.
   #   See the "WARNING" at https://hub.docker.com/_/mongo/
   volumes:
@@ -60,13 +60,17 @@ kobocat:
     - ./.vols/static/kobocat:/srv/static
     - ./.vols/kobocat_media_uploads:/srv/src/kobocat/media
     - ./backups/kobocat:/srv/backups
+    - ./log/kobocat:/srv/logs
     - ./scripts/wait_for_rabbit.bash:/etc/my_init.d/01_wait_for_rabbit.bash:ro
     - ./scripts/wait_for_mongo.bash:/etc/my_init.d/02_wait_for_mongo.bash:ro
     - ./scripts/wait_for_postgres.bash:/etc/my_init.d/03_wait_for_postgres.bash:ro
     - ./scripts/wait_for_kpi.bash:/etc/my_init.d/04_wait_for_kpi.bash:ro
     - ./scripts/runtime_variables_kobocat.source.bash:/etc/profile.d/runtime_variables_kobocat.source.bash.sh:ro
-    # Dev: Use the live `kobocat` directory from the host machine.
+    # Dev: Use live source directories from the host machine.
     # - ../kobocat:/srv/src/kobocat
+    #- ../formpack/src/formpack:/usr/local/lib/python2.7/dist-packages/formpack
+    # Dev: Share PyDev remote debugger source into container.
+    #- ~/devel/liclipse/plugins/org.python.pydev_5.4.0.201611281405/pysrc:/srv/pydev_orig:ro
     # Dev: Share your `.transifexrc` into the container.
     # - ./.transifexrc:/root/.transifexrc
   environment:
@@ -93,13 +97,19 @@ kpi:
     - ./.vols/static/kpi:/srv/static
     # The Whoosh search index needs persistent storage
     - ./.vols/whoosh:/srv/whoosh
+    - ./log/kpi:/srv/logs
     - ./scripts/wait_for_rabbit.bash:/etc/my_init.d/01_wait_for_rabbit.bash:ro
     - ./scripts/wait_for_mongo.bash:/etc/my_init.d/02_wait_for_mongo.bash:ro
     - ./scripts/wait_for_postgres.bash:/etc/my_init.d/03_wait_for_postgres.bash:ro
     - ./scripts/create_kobo_superuser.bash://etc/my_init.d/20_create_kobo_superuser.bash:ro
     - ./scripts/runtime_variables_kpi.source.bash:/etc/profile.d/runtime_variables_kpi.source.bash.sh:ro
-    # Dev: Use the live `kpi` directory from the host machine.
+    # Dev: Use live source directories from the host machine.
     # - ../kpi:/srv/src/kpi
+    #- ../formpack/src/formpack:/usr/local/lib/python2.7/dist-packages/formpack
+    # Allow access to Kobocat's media uploads within KPI
+    - ./.vols/kobocat_media_uploads:/srv/src/kobocat/media
+    # Dev: Share PyDev remote debugger source into container.
+    #- ~/devel/liclipse/plugins/org.python.pydev_5.4.0.201611281405/pysrc:/srv/pydev_orig:ro
     # Dev: Share your `.transifexrc` into the container.
     # - ./.transifexrc:/root/.transifexrc
   restart: on-failure
@@ -117,7 +127,7 @@ nginx:
   environment:
     - NGINX_CONFIG_FILE_NAME=nginx_site_http.conf
   ports:
-    # NOTE: The host ports (left of the ":") must match the values in 
+    # NOTE: The host ports (left of the ":") must match the values in
     #   `envfile.local.txt`. Do not modify the container ports (right side).
     - 8000:9000 # KPI
     - 8001:9001 # KoBoCAT

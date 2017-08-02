@@ -14,13 +14,13 @@ Once this is noted, you can `docker-compose stop` and search for potentially-mis
 
 # Setup procedure:
 
-1. The first decision to make is whether your `kobo-docker` instance will use secure (**HTTPS**) or insecure (plain **HTTP**) communications when interacting with clients. While secure communications are obviously desirable, the requirements imposed by the public key cryptographic system underpinning HTTPS add a considerable degree of complexity to the initial setup (we are in the process of eventually simplifying this with [`lestencrypt`](https://letsencrypt.org/)). In contrast, setups using plain HTTP can be suitable in some cases where security threats are unlikely. To emphasize the difference between the two types of setup, they are referred to herein as **server** (HTTPS) and **local** (HTTP).
+1. The first decision to make is whether your `kobo-docker` instance will use secure (**HTTPS**) or insecure (plain **HTTP**) communications when interacting with clients. While secure communications are obviously desirable, the requirements imposed by the public key cryptographic system underpinning HTTPS add a considerable degree of complexity to the initial setup (we are in the process of eventually simplifying this with [`letsencrypt`](https://letsencrypt.org/)). In contrast, setups using plain HTTP can be suitable in some cases where security threats are unlikely, such as for use strictly within a secure private network. To emphasize the difference between the two types of setup, they are referred to herein as **server** (HTTPS) and **local** (HTTP).
 
 2. Clone this repository, retaining the directory name `kobo-docker`.
 
-3. [Install Docker Compose on 64-bit Linux](https://docs.docker.com/compose/install/). Power users on Mac OS X and Windows can try [the new Docker beta for those platforms](https://blog.docker.com/2016/03/docker-for-mac-windows-beta/), but there are known issues with filesystem syncing on those platforms.
+3. [Install Docker Compose for Linux on x86-64](https://docs.docker.com/compose/install/). Power users on Mac OS X and Windows can try [the new Docker beta for those platforms](https://blog.docker.com/2016/03/docker-for-mac-windows-beta/), but there are known issues with filesystem syncing on those platforms.
 
-4. Determine whether you want to create an HTTP-only **local** instance of KoBo Toolbox, or a HTTPS publicly-accessible **server** instance. Local instances will use [`docker-compose.local.yml`](./docker-compose.local.yml) and [`envfile.local.txt`](./envfile.local.txt), whereas server instances will use [`docker-compose.server.yml`](./docker-compose.server.yml) and [`envfile.server.txt`](./envfile.server.txt) instead.  
+4. Decide whether you want to create an HTTP-only **local** instance of KoBo Toolbox, or a HTTPS publicly-accessible **server** instance. Local instances will use [`docker-compose.local.yml`](./docker-compose.local.yml) and [`envfile.local.txt`](./envfile.local.txt), whereas server instances will use [`docker-compose.server.yml`](./docker-compose.server.yml) and [`envfile.server.txt`](./envfile.server.txt) instead.  
 **NOTE:** For server instances, **you are expected to meet the usual basic requirements of serving over HTTPS**. That is, **public (not local-only) DNS records** for the domain and subdomains as specified in [`envfile.server.txt`](./envfile.server.txt), as well as a **CA-signed (not self-signed)** wildcard (or SAN) SSL certificate+key pair valid for those subdomains, and **some basic knowledge of Nginx server administration and the use of SSL**.
 
 5. Based on your desired instance type, create a symlink named `docker-compose.yml` to either [`docker-compose.local.yml`](./docker-compose.local.yml) or [`docker-compose.server.yml`](./docker-compose.server.yml) (e.g. `ln -s docker-compose.local.yml docker-compose.yml`). Alternatively, you can skip this step and explicitly prefix all Docker Compose commands as follows: `docker-compose -f docker-compose.local.yml ...`.
@@ -32,9 +32,9 @@ Once this is noted, you can `docker-compose stop` and search for potentially-mis
 8. Optionally enable additional settings for your Google Analytics token, S3 bucket, e-mail settings, etc. by editing the files in [`envfiles/`](./envfiles).
 
 9. **Server-only steps:**
-  1. Make a `secrets` directory in the project root and copy the SSL certificate and key files to `secrets/ssl.crt` and `secrets/ssl.key` respectively. **The certificate and key are expected to use exactly these filenames and must comprise either a wildcard or SAN certificate+key pair which are valid for the domain and subdomains specified in [`envfile.server.txt`](./envfile.server.txt).**
+    1. Make a `secrets` directory in the project root and copy the SSL certificate and key files to `secrets/ssl.crt` and `secrets/ssl.key` respectively. **The certificate and key are expected to use exactly these filenames and must comprise either a wildcard or SAN certificate+key pair which are valid for the domain and subdomains specified in [`envfile.server.txt`](./envfile.server.txt).**
 
-  2. If testing on a server that is not publicly accessible at the subdomains you've specified in [`envfile.server.txt`](./envfile.server.txt), put an entry in your host machine's `/etc/hosts` file for each of the three subdomains you entered to reroute such requests to your machine's address (e.g. `192.168.1.123 kf-local.kobotoolbox.org`). Also, uncomment and customize the `extra_hosts` directives in [`docker-compose.server.yml`](./docker-compose.server.yml).
+    2. If testing on a server that is not publicly accessible at the subdomains you've specified in [`envfile.server.txt`](./envfile.server.txt), put an entry in your host machine's `/etc/hosts` file for each of the three subdomains you entered to reroute such requests to your machine's address (e.g. `192.168.1.123 kf-local.kobotoolbox.org`). Also, uncomment and customize the `extra_hosts` directives in [`docker-compose.server.yml`](./docker-compose.server.yml). This can also be necessary in situations where 
 <!-- 8. Optionally stop and clear previously built `kobo-docker` containers: `docker-compose stop; docker-compose rm`. -->
 <!-- 9. Optionally clear persisted files (e.g. the Postgres database) from previous runs, **taking care that you are in the `kobo-docker` directory**: `sudo rm -rf .vols/ log/`. -->
 
@@ -56,7 +56,20 @@ docker exec -it kobodocker_mongo_1 /srv/backup_mongo.bash
 docker exec -it kobodocker_postgres_1 /srv/backup_postgres.bash
 ```
 
-# Basic troubleshooting
+# Troubleshooting
+
+## Basic troubleshooting
 You can confirm that your containers are running with `docker ps`. To inspect the log output from the containers, execute `docker-compose logs -f` or for a specific container use e.g. `docker-compose logs -f redis_main`.
 
 The documentation for Docker can be found at https://docs.docker.com.
+
+## Django debugging
+Developers can use [PyDev](http://www.pydev.org/)'s [remote, graphical Python debugger](http://www.pydev.org/manual_adv_remote_debugger.html) to debug Python/Django code. To enable for the `kpi` container:
+
+1. Specify the mapping(s) between target Python source/library paths on the debugging machine to the locations of those files/directories inside the container by customizing and uncommenting the `KPI_PATH_FROM_ECLIPSE_TO_PYTHON_PAIRS` variable in [`envfiles/kpi.txt`](./envfiles/kpi.txt).
+2. Share the source directory of the PyDev remote debugger plugin into the container by customizing (taking care to note the actual location of the version-numbered directory) and uncommenting the relevant `volumes` entry in your `docker-compose.yml`.
+3. To ensure PyDev shows you the same version of the code as is being run in the container, share your live version of any target Python source/library files/directories into the container by customizing and uncommenting the relevant `volumes` entry in your `docker-compose.yml`.
+4. Start the PyDev remote debugger server and ensure that no firewall or other settings will prevent the containers from connecting to your debugging machine at the reported port.
+5. Breakpoints can be inserted with e.g. `import pydevd; pydevd.settrace('${DEBUGGING_MACHINE_IP}')`.
+
+Remote debugging in the `kobocat` container can be accomplished in a similar manner.
