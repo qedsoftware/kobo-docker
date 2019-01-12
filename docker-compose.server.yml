@@ -1,7 +1,8 @@
+# vim: set ts=2 sts=2 sw=2:
 # For public, HTTPS servers.
 
 rabbit:
-  image: kobotoolbox/rabbit:latest
+  image: qeddockerhub/kt-rabbit:latest
   # Dev: Build the image locally.
   # build: ./base_images/rabbit
   hostname: rabbit
@@ -12,7 +13,7 @@ rabbit:
   restart: unless-stopped
 
 postgres:
-  image: kobotoolbox/postgres:latest
+  image: qeddockerhub/kt-postgres:latest
   # Dev: Build the image locally.
   # build: ./base_images/postgres
   hostname: postgres
@@ -25,7 +26,7 @@ postgres:
   restart: unless-stopped
 
 mongo:
-  image: kobotoolbox/mongo:latest
+  image: qeddockerhub/kt-mongo:latest
   # Dev: Build the image locally.
   # build: ./base_images/mongo
   hostname: mongo
@@ -131,7 +132,7 @@ kpi:
   #   - 'kc-local.kobotoolbox.org:172.17.0.1'
 
 nginx:
-  image: kobotoolbox/nginx:latest
+  image: qeddockerhub/kt-nginx:latest
   # Dev: Build the image locally.
   # build: ./base_images/nginx
   hostname: nginx
@@ -159,9 +160,10 @@ nginx:
     - enketo_express
   restart: unless-stopped
 
-# Adapted from https://github.com/kobotoolbox/enketo-express/blob/docker/docker-compose.yml.
+# Adapted from https://github.com/kobotoolbox/enketo-express/blob/master/setup/docker/docker-compose.yml
+# TODO: consider switching to qeddockerhub/enketo-express-extra-widgets
 enketo_express:
-  image: kobotoolbox/enketo_express
+  image: qeddockerhub/enketo_express:latest
   # Dev: Build the image locally.
   # build: ../enketo-express/
   env_file:
@@ -187,7 +189,7 @@ enketo_express:
   #   - 'kf-local.kobotoolbox.org:172.17.0.1'
   #   - 'kc-local.kobotoolbox.org:172.17.0.1'
 
-# Adapted from https://github.com/kobotoolbox/enketo-express/blob/docker/docker-compose.yml.
+# Adapted from https://github.com/kobotoolbox/enketo-express/blob/master/setup/docker/docker-compose.yml
 redis_main:
   image: redis:2.6
   # Map our "main" Redis config into the container.
@@ -196,7 +198,7 @@ redis_main:
     - ./.vols/redis_main_data/:/data/
   restart: unless-stopped
 
-# Adapted from https://github.com/kobotoolbox/enketo-express/blob/docker/docker-compose.yml.
+# Adapted from https://github.com/kobotoolbox/enketo-express/blob/master/setup/docker/docker-compose.yml
 redis_cache:
   image: redis:2.6
   # Map our "cache" Redis config into the container.

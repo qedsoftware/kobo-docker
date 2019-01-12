@@ -1,4 +1,4 @@
-FROM kobotoolbox/base:latest
+FROM qeddockerhub/kt-base:latest
 
 MAINTAINER Serban Teodorescu, teodorescu.serban@gmail.com
 

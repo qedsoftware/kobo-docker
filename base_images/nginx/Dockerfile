@@ -1,4 +1,4 @@
-FROM kobotoolbox/base-nginx:latest
+FROM qeddockerhub/kt-base-nginx:latest
 
 MAINTAINER Serban Teodorescu, teodorescu.serban@gmail.com
 
