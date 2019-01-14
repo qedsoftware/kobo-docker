@@ -1,4 +1,4 @@
-FROM kobotoolbox/base-rabbit:latest
+FROM qeddockerhub/kt-base-rabbit:latest
 
 COPY run_rabbit /etc/service/rabbit/run
 COPY run_rabbit-configure /etc/service/rabbit-configure/run

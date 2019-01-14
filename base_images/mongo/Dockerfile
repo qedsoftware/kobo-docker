@@ -1,4 +1,4 @@
-FROM kobotoolbox/base-mongo:latest
+FROM qeddockerhub/kt-base-mongo:latest
 
 MAINTAINER Serban Teodorescu, teodorescu.serban@gmail.com
 
