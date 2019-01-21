@@ -7,7 +7,7 @@ Once this is noted, you can `docker-compose stop` and search for potentially-mis
 
 # kobo-docker
 
-`kobo-docker` is used to run a copy of the [KoBo Toolbox](http://www.kobotoolbox.org) survey data collection platform on a machine of your choosing. It relies [Docker](https://docker.com) to separate the different parts of KoBo into different containers (which can be thought of as lighter-weight virtual machines) and [Docker Compose](https://docs.docker.com/compose/) to configure, run, and connect those containers. Below is a diagram (made with [Lucidchart](lucidchart.com)) of the containers that make up a running `kobo-docker` system and their connections:
+`kobo-docker` is used to run a copy of the [KoBo Toolbox](http://www.kobotoolbox.org) survey data collection platform on a machine of your choosing. It relies on [Docker](https://docker.com) to separate the different parts of KoBo into different containers (which can be thought of as lighter-weight virtual machines) and [Docker Compose](https://docs.docker.com/compose/) to configure, run, and connect those containers. Below is a diagram (made with [Lucidchart](lucidchart.com)) of the containers that make up a running `kobo-docker` system and their connections:
 ![Container diagram](./doc/Container_diagram.png)
 
 
@@ -41,6 +41,12 @@ Once this is noted, you can `docker-compose stop` and search for potentially-mis
 10. Build any images you've chosen to manually override: `docker-compose build`.
 
 11. Start the server: `docker-compose up -d` (or without the `-d` option to run in the foreground).
+
+11 - Bugfix. # FORM DEPLOYMENT BUG PLEASE BE ADVICED - AS FROM 10/04/2018: (should be removed when fixed)
+If you start the kobo-docker framework the first time you have to set the permission of the media-folder correctly.
+otherwise form deployment as well as project creation will fail:
+Please run the following command inside your kobo-docker folder:
+`docker-compose exec kobocat chown -R wsgi /srv/src/kobocat`
 
 12. Container output can be followed with `docker-compose logs -f`. For an individual container, logs can be followed by using the container name from your `docker-compose.yml` with e.g. `docker-compose logs -f enketo_express`.
 
