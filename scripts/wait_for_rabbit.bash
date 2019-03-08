@@ -2,5 +2,5 @@
 set -e
 
 echo 'Waiting for container `rabbit`.'
-dockerize -timeout=40s -wait ${RABBIT_PORT}
+dockerize -timeout=40s
 echo 'Container `rabbit` up.'
