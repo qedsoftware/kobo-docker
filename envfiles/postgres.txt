@@ -1,0 +1,2 @@
+# Make sure the port matches the exposed one in Dockerfile
+POSTGRES_SERVICE_URI=tcp://postgres:5432

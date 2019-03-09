@@ -54,6 +54,10 @@ kobocat:
     - ./envfiles/kobocat.txt
     - ./envfiles/nginx.txt
     - ./envfiles/smtp.txt
+    - ./envfiles/rabbit.txt
+    - ./envfiles/mongo.txt
+    - ./envfiles/postgres.txt
+    - ./envfiles/kpi.txt
   links:
     - rabbit
     - mongo
@@ -98,6 +102,9 @@ kpi:
     - ./envfiles/kpi.txt
     - ./envfiles/nginx.txt
     - ./envfiles/smtp.txt
+    - ./envfiles/rabbit.txt
+    - ./envfiles/mongo.txt
+    - ./envfiles/postgres.txt
   environment:
     - SECURE_PROXY_SSL_HEADER=HTTP_X_FORWARDED_PROTO, https
   links:

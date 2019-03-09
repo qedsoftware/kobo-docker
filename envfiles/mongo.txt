@@ -1,0 +1,2 @@
+# Make sure the port matches the exposed one in Dockerfile
+MONGO_SERVICE_URI=tcp://mongo:27017
