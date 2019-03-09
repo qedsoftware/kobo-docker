@@ -2,5 +2,5 @@
 set -e
 
 echo 'Waiting for container `rabbit`.'
-dockerize -timeout=40s -wait tcp://rabbit:5672
+dockerize -timeout=40s -wait ${RABBIT_SERVICE_URI}
 echo 'Container `rabbit` up.'

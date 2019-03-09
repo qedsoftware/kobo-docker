@@ -54,6 +54,10 @@ services:
       - ./envfiles/kobocat.txt
       - ./envfiles/nginx.txt
       - ./envfiles/smtp.txt
+      - ./envfiles/rabbit.txt
+      - ./envfiles/mongo.txt
+      - ./envfiles/postgres.txt
+      - ./envfiles/kpi.txt
     depends_on:
       - rabbit
       - mongo
@@ -92,6 +96,9 @@ services:
       - ./envfiles/kpi.txt
       - ./envfiles/nginx.txt
       - ./envfiles/smtp.txt
+      - ./envfiles/rabbit.txt
+      - ./envfiles/mongo.txt
+      - ./envfiles/postgres.txt
     depends_on:
       - postgres
       - rabbit

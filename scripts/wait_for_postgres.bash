@@ -2,7 +2,7 @@
 set -e
 
 echo 'Waiting for container `postgres`.'
-dockerize -timeout=20s -wait tcp://postgres:5432
+dockerize -timeout=20s -wait ${POSTGRES_SERVICE_URI}
 echo 'Container `postgres` up.'
 
 echo 'Waiting for Postgres service.'

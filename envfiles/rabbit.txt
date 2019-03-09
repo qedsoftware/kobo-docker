@@ -1,0 +1,1 @@
+RABBIT_SERVICE_URI=tcp://rabbit:5672

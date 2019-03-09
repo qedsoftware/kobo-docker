@@ -5,6 +5,7 @@ ENKETO_VERSION=Express
 KPI_PREFIX=/
 KPI_BROKER_URL=amqp://kpi:kpi@rabbit:5672/kpi
 DATABASE_URL=postgres://kobo:kobo@postgres:5432/kobotoolbox
+KPI_SERVICE_URI=tcp://kpi:8000
 
 # Set the variables below to your kobocat and enketo url
 #KOBOCAT_URL=

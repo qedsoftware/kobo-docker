@@ -2,7 +2,7 @@
 set -e
 
 echo 'Waiting for container `kpi`.'
-dockerize -timeout=60s -wait tcp:://kpi:8000
+dockerize -timeout=60s -wait ${KPI_SERVICE_URI}
 echo 'Container `kpi` up.'
 
 echo 'Waiting for `kpi` web service.'
