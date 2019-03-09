@@ -136,7 +136,8 @@ nginx:
     - NGINX_CONFIG_FILE_NAME=nginx_site_http.conf
   ports:
     # NOTE: The host ports (left of the ":") must match the values in
-    #   `envfile.local.txt`. Do not modify the container ports (right side).
+    # `envfile.local.txt` and `envfiles/kpi.txt. Do not modify the
+    # container ports (right side).
     - 8000:9000 # KPI
     - 8001:9001 # KoBoCAT
     - 8005:9005 # Enketo Express
