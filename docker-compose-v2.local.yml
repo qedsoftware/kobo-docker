@@ -43,7 +43,7 @@ services:
     restart: on-failure
 
   kobocat:
-    image: qeddockerhub/kobocat-auto:stable-2019-02-25
+    image: qeddockerhub/kobocat-auto:latest
     # Dev: Build the image locally.
     # build: ../kobocat
     hostname: kobocat
@@ -85,7 +85,7 @@ services:
     restart: on-failure
 
   kpi:
-    image: qeddockerhub/kpi-auto:stable-2019-01-14
+    image: qeddockerhub/kpi-auto:latest
     # Dev: Build the image locally.
     # build: ../kpi
     hostname: kpi
@@ -139,8 +139,8 @@ services:
     ports:
       # NOTE: The host ports (left of the ":") must match the values in
       #   `envfile.local.txt`. Do not modify the container ports (right side).
-      - 8003:9000 # KPI
-      - 8004:9001 # KoBoCAT
+      - 8000:9000 # KPI
+      - 8001:9001 # KoBoCAT
       - 8005:9005 # Enketo Express
     volumes:
         - ./.vols/static:/srv/www:ro
@@ -157,7 +157,7 @@ services:
   # Adapted from https://github.com/kobotoolbox/enketo-express/blob/master/setup/docker/docker-compose.yml
   # TODO: consider switching to qeddockerhub/enketo-express-extra-widgets
   enketo_express:
-    image: qeddockerhub/enketo-express:stable-2019-01-14
+    image: qeddockerhub/enketo-express:latest
     # Dev: Build the image locally.
     # build: ../enketo-express/
     env_file:
