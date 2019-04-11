@@ -32,7 +32,7 @@ KPI_PRODUCTION_LOCATION_STATIC='location /static {
 
 mkdir -p ${TEMPLATES_ENABLED_DIR}
 
-for ip in $(echo $LB_IPS); do
+for ip in $(echo $LOAD_BALANCERS_IPS); do
     sed 's/http {/http {\n\tset_real_ip_from ${ip};/' /etc/nginx/nginx.conf > /etc/nginx/nginx.conf.real;
     cp /etc/nginx/nginx.conf.real /etc/nginx/nginx.conf;
 done;
