@@ -32,9 +32,14 @@ KPI_PRODUCTION_LOCATION_STATIC='location /static {
 
 mkdir -p ${TEMPLATES_ENABLED_DIR}
 
+# Make all lines with \tset_real_ip_from empty
+sed -i "s/\tset_real_ip_from.*//" /etc/nginx/nginx.conf
+# Remove all empty lines
+sed -i "/^$/d" /etc/nginx/nginx.conf
+
+# Add one set_real_ip_from per each LOAD_BALANCER_IPS
 for ip in $(echo $LOAD_BALANCERS_IPS); do
-    sed "s/http {/http {\n\tset_real_ip_from ${ip};/" /etc/nginx/nginx.conf > /etc/nginx/nginx.conf.real;
-    cp /etc/nginx/nginx.conf.real /etc/nginx/nginx.conf;
+    sed -i "s/http {/http {\n\tset_real_ip_from ${ip};/" /etc/nginx/nginx.conf
 done;
 
 echo "Clearing out any default configurations."
