@@ -26,6 +26,12 @@ server {
 
     ${kobocat_location_static}
 
+    # media files
+    location /protected/ {
+        internal;
+        alias /media/;
+    }
+
     location / {
         # Proxy through uWSGI.
         ${kobocat_include_uwsgi_pass}

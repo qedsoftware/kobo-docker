@@ -49,6 +49,12 @@ server {
     }
 
     ${kobocat_location_static}
+
+    # media files
+    location /protected/ {
+        internal;
+        alias /media/;
+    }
 }
 
 # KoBoForm HTTP.
