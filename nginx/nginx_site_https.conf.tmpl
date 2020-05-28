@@ -7,6 +7,19 @@ charset     utf-8;
 # Dumb, non-SNI clients will receive the certificate
 # for the first HTTPS server listed.
 
+geo $client_cert_required {
+    default ${REQUIRE_CLIENT_CERT_FOR_EXTERNAL_CLIENTS};
+    10.0.0.0/8 no;
+    172.16.0.0/12 no;
+    192.168.0.0/16 no;
+}
+
+map "$client_cert_required:$ssl_client_verify" $client_cert_auth_failed {
+    "~*^no:" 0;
+    "yes:SUCCESS" 0;
+    default 1;
+}
+
 # KoBoCAT HTTP.
 server {
     listen      80;
@@ -33,6 +46,13 @@ server {
     # to add it again to the kf.kobotoolbox.org configuration;
     # old Android doesn't support SNI and would never see it there.
     ssl_ciphers 'AES256+EECDH:AES256+EDH:DHE-RSA-AES128-SHA';
+
+    ssl_client_certificate /tmp/kobo_toolbox_secrets/lb-to-backend-ca.crt;
+    ssl_verify_client optional;
+
+    if ($client_cert_auth_failed) {
+        return 400;
+    }
 
     # max upload size
     client_max_body_size 75M;
@@ -74,6 +94,13 @@ server {
     server_name ${KOBOFORM_PUBLIC_SUBDOMAIN}.${PUBLIC_DOMAIN_NAME};
     ssl_certificate_key /tmp/kobo_toolbox_secrets/ssl.key;
     ssl_certificate /tmp/kobo_toolbox_secrets/ssl.crt;
+
+    ssl_client_certificate /tmp/kobo_toolbox_secrets/lb-to-backend-ca.crt;
+    ssl_verify_client optional;
+
+    if ($client_cert_auth_failed) {
+        return 400;
+    }
 
     # max upload size
     client_max_body_size 75M;
@@ -130,6 +157,13 @@ server {
     # TODO: Automatically activate this if `dhparam.pem` provided.
     #ssl_dhparam /etc/nginx/ssl/dhparam.pem;
 
+    ssl_client_certificate /tmp/kobo_toolbox_secrets/lb-to-backend-ca.crt;
+    ssl_verify_client optional;
+
+    if ($client_cert_auth_failed) {
+        return 400;
+    }
+
     client_max_body_size 100M;
 
     add_header Strict-Transport-Security max-age=63072000;
@@ -168,6 +202,13 @@ server {
     ssl_stapling_verify on;
     resolver 8.8.4.4 8.8.8.8 valid=300s;
     resolver_timeout 10s;
+
+    ssl_client_certificate /tmp/kobo_toolbox_secrets/lb-to-backend-ca.crt;
+    ssl_verify_client optional;
+
+    if ($client_cert_auth_failed) {
+        return 400;
+    }
 
     ssl_prefer_server_ciphers on;
     # TODO: Automatically activate this if `dhparam.pem` provided.
